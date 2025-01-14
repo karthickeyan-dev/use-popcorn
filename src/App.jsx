@@ -51,19 +51,19 @@ const average = arr =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 const KEY = 'e35a74cd';
-const query = 'interstellar';
-// const query = 'swfttwf';
 
 export default function App() {
+  const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    setIsLoading(true);
     async function fetchMovies() {
       try {
+        setError('');
+        setIsLoading(true);
         const res = await fetch(
           `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
         );
@@ -72,24 +72,31 @@ export default function App() {
         }
         const data = await res.json();
         if (data.Response === 'False') {
-          throw new Error(`Cannot find the movie '${query}'`);
+          throw new Error(`Cannot find any results`);
         }
         setMovies(data.Search);
       } catch (err) {
         setError(err.message);
-        console.error(`🚫${err}🚫`);
+        // console.error(`🚫${err}🚫`);
       } finally {
         setIsLoading(false);
       }
     }
+
+    if (query.length < 3) {
+      setError('');
+      setMovies([]);
+      return;
+    }
+
     fetchMovies();
-  }, []);
+  }, [query]);
 
   return (
     <>
       <NavBar>
         <Logo />
-        <SearchBox />
+        <SearchBox query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
 
@@ -134,9 +141,7 @@ function Logo() {
   );
 }
 
-function SearchBox() {
-  const [query, setQuery] = useState('');
-
+function SearchBox({ query, setQuery }) {
   return (
     <input
       className="search"
