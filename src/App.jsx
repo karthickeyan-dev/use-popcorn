@@ -37,12 +37,15 @@ export default function App() {
       return;
     }
 
+    const controller = new AbortController();
+
     async function fetchMovies() {
       try {
         setError('');
         setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+          { signal: controller.signal }
         );
         if (!res.ok) {
           throw new Error('Something went wrong with fetching movies');
@@ -53,14 +56,19 @@ export default function App() {
         }
         setMovies(data.Search);
       } catch (err) {
-        setError(err.message);
-        // console.error(`🚫${err}🚫`);
+        if (err.name !== 'AbortError') {
+          setError(err.message);
+          // console.error(`🚫${err}🚫`);
+        }
       } finally {
         setIsLoading(false);
       }
     }
-
     fetchMovies();
+
+    return function () {
+      controller.abort();
+    };
   }, [query]);
 
   return (
