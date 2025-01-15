@@ -11,7 +11,12 @@ const StarContainerStyle = {
   gap: '4px',
 };
 
-function StarRating({ maxRating = 5, color = '#fcc418', size = 32 }) {
+function StarRating({
+  maxRating = 5,
+  color = '#fcc418',
+  size = 32,
+  onSetRating,
+}) {
   const [rating, setRating] = useState(0);
   const [tempRating, setTempRating] = useState(0);
 
@@ -22,13 +27,19 @@ function StarRating({ maxRating = 5, color = '#fcc418', size = 32 }) {
     fontSize: `${size / 1.5}px`,
   };
 
+  const handleRating = function (newRating) {
+    newRating = newRating === rating ? null : newRating;
+    setRating(newRating);
+    onSetRating(newRating);
+  };
+
   return (
     <div style={containerStyle}>
       <div style={StarContainerStyle} onMouseLeave={() => setTempRating(0)}>
         {Array.from({ length: maxRating }, (_, i) => (
           <Star
             key={i}
-            handleClick={() => setRating(i + 1)}
+            handleClick={() => handleRating(i + 1)}
             handleMouseEnter={() => setTempRating(i + 1)}
             isFull={(tempRating || rating) >= i + 1}
             color={color}
