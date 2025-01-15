@@ -31,6 +31,11 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (selectedId) {
+      handleCloseMovie();
+      // console.log('closing movie details');
+    }
+
     if (query.length < 3) {
       setError('');
       setMovies([]);
@@ -276,7 +281,7 @@ function MovieDetails({ selectedId, onCloseMovie, watched, onAddWatched }) {
     function callback(e) {
       if (e.code === 'Escape') {
         onCloseMovie();
-        console.log('CLOSING');
+        // console.log('CLOSING');
       }
     }
     document.addEventListener('keydown', callback);
