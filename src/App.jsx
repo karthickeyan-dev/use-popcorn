@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import StarRating from './StarRating.jsx';
 
 const average = arr =>
@@ -9,10 +9,12 @@ const KEY = 'e35a74cd';
 export default function App() {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState('');
+  const [watched, setWatched] = useState(
+    () => JSON.parse(localStorage.getItem('watched')) || []
+  );
 
   const handleSelectMovie = function (id) {
     setSelectedId(selectedId => (selectedId === id ? null : id));
@@ -31,11 +33,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (selectedId) {
-      handleCloseMovie();
-      // console.log('closing movie details');
-    }
+    localStorage.setItem('watched', JSON.stringify(watched));
+  }, [watched]);
 
+  useEffect(() => {
     if (query.length < 3) {
       setError('');
       setMovies([]);
@@ -143,11 +144,29 @@ function Logo() {
 }
 
 function SearchBox({ query, setQuery }) {
+  const inputEl = useRef(null);
+
+  useEffect(() => {
+    function callback(e) {
+      if (document.activeElement === inputEl.current) return;
+
+      if (e.code === 'Enter') {
+        inputEl.current.focus();
+        setQuery('');
+        // console.log(inputEl);
+      }
+    }
+
+    document.addEventListener('keydown', callback);
+    return () => document.removeEventListener('keydown', callback);
+  }, [setQuery]);
+
   return (
     <input
       className="search"
       type="text"
       placeholder="Search movies..."
+      ref={inputEl}
       value={query}
       onChange={e => setQuery(e.target.value)}
     />
