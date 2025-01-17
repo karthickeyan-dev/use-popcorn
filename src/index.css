@@ -196,6 +196,31 @@ body {
   gap: 0.8rem;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.btn-pagination {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: none;
+  border-radius: 2.4rem;
+  font-size: 1.4rem;
+  padding: 0.8rem 1.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  display: flex;
+  gap: 0.8rem;
+}
+
+.btn-pagination:hover {
+  background-color: var(--color-primary-light);
+}
+
 .btn-delete {
   position: absolute;
   right: 2.4rem;

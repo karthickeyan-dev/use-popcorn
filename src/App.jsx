@@ -10,6 +10,7 @@ import Logo from './components/Logo';
 import SearchBox from './components/SearchBox';
 import NumResults from './components/NumResults';
 import MovieDetails from './components/MovieDetails';
+import Button from './components/Button';
 
 export default function App() {
   const [query, setQuery] = useState('');
@@ -47,6 +48,10 @@ export default function App() {
           {!isLoading && !error && (
             <MoviesList movies={movies} onSelectMovie={handleSelectMovie} />
           )}
+          <div className="pagination">
+            <Button>Previous</Button>
+            <Button>Next</Button>
+          </div>
           {error && <ErrorMessage message={error} />}
         </Box>
         <Box>
