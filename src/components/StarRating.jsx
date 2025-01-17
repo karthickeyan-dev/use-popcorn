@@ -11,7 +11,7 @@ const StarContainerStyle = {
   gap: '4px',
 };
 
-function StarRating({
+export default function StarRating({
   maxRating = 5,
   color = '#fcc418',
   size = 32,
@@ -93,5 +93,3 @@ function Star({ handleClick, handleMouseEnter, isFull, color, size }) {
     </span>
   );
 }
-
-export default StarRating;
