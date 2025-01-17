@@ -68,16 +68,16 @@ export default function App() {
       <Main>
         <Box>
           {isLoading && <Loader />}
-          {!isLoading && !error && (
-            <MoviesList movies={movies} onSelectMovie={handleSelectMovie} />
-          )}
-          {Boolean(movies.length) && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPreviousPage={handlePreviousPage}
-              onNextPage={handleNextPage}
-            />
+          {!isLoading && !error && Boolean(movies.length) && (
+            <>
+              <MoviesList movies={movies} onSelectMovie={handleSelectMovie} />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPreviousPage={handlePreviousPage}
+                onNextPage={handleNextPage}
+              />
+            </>
           )}
           {error && <ErrorMessage message={error} />}
         </Box>

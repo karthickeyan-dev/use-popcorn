@@ -9,11 +9,15 @@ export default function Pagination({
   return (
     <div className="pagination">
       {currentPage !== 1 && (
-        <Button handleClick={onPreviousPage}>Previous</Button>
+        <Button classProp="pagination-prev" handleClick={onPreviousPage}>
+          Previous
+        </Button>
       )}
-      <p>{currentPage}</p>
+      {totalPages !== 1 && <p className="pagination-curr">{currentPage}</p>}
       {currentPage !== totalPages && (
-        <Button handleClick={onNextPage}>Next</Button>
+        <Button classProp="pagination-next" handleClick={onNextPage}>
+          Next
+        </Button>
       )}
     </div>
   );

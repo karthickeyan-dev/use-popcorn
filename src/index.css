@@ -199,7 +199,29 @@ body {
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 8rem;
+  position: relative;
+  padding: 0.8rem 0 1.6rem 0;
+}
+
+.pagination-prev {
+  position: absolute;
+  transform: translateX(-12.8rem);
+}
+
+.pagination-next {
+  position: absolute;
+  transform: translateX(12.8rem);
+}
+
+.pagination-curr {
+  background-color: var(--color-background-100);
+  color: var(--color-text-dark);
+  border: none;
+  border-radius: 2.4rem;
+  font-size: 1.4rem;
+  padding: 0.8rem 1.6rem;
 }
 
 .btn-pagination {
@@ -372,10 +394,19 @@ body {
   justify-content: center;
 }
 
-.box::-webkit-scrollbar,
-.list::-webkit-scrollbar {
-  display: none;
-  scroll-behavior: smooth;
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-100);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-dark);
+  border-radius: 8px;
 }
 
 /*
