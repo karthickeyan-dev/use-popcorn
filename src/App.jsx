@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useMovies } from './useMovies';
+import { UseLocalStorage } from './useLocalStorage';
+import { useKeyDown } from './useKeyDown';
 import StarRating from './StarRating';
 
 const average = arr =>
@@ -10,10 +12,7 @@ const KEY = 'e35a74cd';
 export default function App() {
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState(null);
-  const [watched, setWatched] = useState(
-    () => JSON.parse(localStorage.getItem('watched')) || []
-  );
-
+  const [watched, setWatched] = UseLocalStorage([], 'watched');
   const { movies, isLoading, error } = useMovies(query);
 
   function handleSelectMovie(id) {
@@ -31,10 +30,6 @@ export default function App() {
   function handleDeleteWatched(id) {
     setWatched(watched => watched.filter(movie => movie.imdbID !== id));
   }
-
-  useEffect(() => {
-    localStorage.setItem('watched', JSON.stringify(watched));
-  }, [watched]);
 
   return (
     <>
@@ -105,20 +100,11 @@ function Logo() {
 function SearchBox({ query, setQuery }) {
   const inputEl = useRef(null);
 
-  useEffect(() => {
-    function callback(e) {
-      if (document.activeElement === inputEl.current) return;
-
-      if (e.code === 'Enter') {
-        inputEl.current.focus();
-        setQuery('');
-        // console.log(inputEl);
-      }
-    }
-
-    document.addEventListener('keydown', callback);
-    return () => document.removeEventListener('keydown', callback);
-  }, [setQuery]);
+  useKeyDown('Enter', () => {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery('');
+  });
 
   return (
     <input
@@ -261,19 +247,7 @@ function MovieDetails({ selectedId, onCloseMovie, watched, onAddWatched }) {
     fetchMovieDetails();
   }, [selectedId]);
 
-  useEffect(() => {
-    function callback(e) {
-      if (e.code === 'Escape') {
-        onCloseMovie();
-        // console.log('CLOSING');
-      }
-    }
-    document.addEventListener('keydown', callback);
-
-    return () => {
-      document.removeEventListener('keydown', callback);
-    };
-  }, [onCloseMovie]);
+  useKeyDown('Escape', onCloseMovie);
 
   return (
     <div className="details">
