@@ -31,7 +31,7 @@ export function useMovies(query, currentPage = 1, resetCurrentPage) {
         setError('');
         setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}&page=${currentPage}`,
+          `https://www.omdbapi.com/?apikey=${KEY}&s=${query}&page=${currentPage}`,
           { signal: controller.signal }
         );
         if (!res.ok) {
