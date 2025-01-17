@@ -10,13 +10,20 @@ import Logo from './components/Logo';
 import SearchBox from './components/SearchBox';
 import NumResults from './components/NumResults';
 import MovieDetails from './components/MovieDetails';
-import Button from './components/Button';
+import Pagination from './components/Pagination';
 
 export default function App() {
   const [query, setQuery] = useState('');
+  const [currentPage, SetCurrentPage] = useState(1);
   const [selectedId, setSelectedId] = useState(null);
   const [watched, setWatched] = UseLocalStorage([], 'watched');
-  const { movies, isLoading, error } = useMovies(query);
+  const { movies, isLoading, error, totalResults } = useMovies(
+    query,
+    currentPage,
+    resetCurrentPage
+  );
+
+  const totalPages = Math.ceil(totalResults / 10);
 
   function handleSelectMovie(id) {
     setSelectedId(selectedId => (selectedId === id ? null : id));
@@ -34,12 +41,28 @@ export default function App() {
     setWatched(watched => watched.filter(movie => movie.imdbID !== id));
   }
 
+  function handlePreviousPage() {
+    if (currentPage > 1) {
+      SetCurrentPage(currentPage => currentPage - 1);
+    }
+  }
+
+  function handleNextPage() {
+    if (currentPage < totalPages) {
+      SetCurrentPage(currentPage => currentPage + 1);
+    }
+  }
+
+  function resetCurrentPage() {
+    SetCurrentPage(1);
+  }
+
   return (
     <>
       <NavBar>
         <Logo />
         <SearchBox query={query} setQuery={setQuery} />
-        <NumResults movies={movies} />
+        <NumResults totalResults={totalResults} />
       </NavBar>
 
       <Main>
@@ -48,10 +71,14 @@ export default function App() {
           {!isLoading && !error && (
             <MoviesList movies={movies} onSelectMovie={handleSelectMovie} />
           )}
-          <div className="pagination">
-            <Button>Previous</Button>
-            <Button>Next</Button>
-          </div>
+          {Boolean(movies.length) && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPreviousPage={handlePreviousPage}
+              onNextPage={handleNextPage}
+            />
+          )}
           {error && <ErrorMessage message={error} />}
         </Box>
         <Box>
