@@ -3,6 +3,7 @@ import { useKeyDown } from '../hooks/useKeyDown';
 import StarRating from './StarRating';
 import Loader from './Loader';
 import ErrorMessage from './ErrorMessage';
+import placeholderImage from '../assets/placeholder.png';
 
 const KEY = 'e35a74cd';
 
@@ -101,7 +102,11 @@ export default function MovieDetails({
             <button className="btn-back" onClick={onCloseMovie}>
               &larr;
             </button>
-            <img src={poster} alt={`Poster of ${title} movie`} />
+            <img
+              src={poster}
+              alt={`Poster of ${title} movie`}
+              onError={e => (e.target.src = placeholderImage)}
+            />
             <div className="details-overview">
               <h2>{title}</h2>
               <p>
